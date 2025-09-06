@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from golem_base_sdk import GolemBaseClient, GenericBytes
-
+import os
 class Receiver:
     def __init__(self, file_path=None, keys=[],priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001",RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
         self.file_path = file_path
@@ -45,8 +45,14 @@ class Receiver:
             return None
 
     async def query_entities(self):
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
         for entity_key in self.keys:
             print(entity_key)
-            result = await self.client.get_storage_value(GenericBytes.from_hex_string(entity_key))
+            try:
+                result = await self.client.get_storage_value(GenericBytes.from_hex_string(entity_key))
+            except Exception as e:
+                print(f"Error during get_storage_value (returning None): {e}")
+                return None
             with open(self.file_path, "ab") as file:
                 file.write(result)

@@ -1,0 +1,10 @@
+Functionalities:
+1. Upload data dump to golemdb
+2. Download data dump from golemdb
+3. Search for data dumps by 
+
+Keys of entities are stored in smart contract in such manner:
+
+batch_id (uuid4) -> key1
+batch_id (uuid4) -> key2
+...
