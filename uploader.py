@@ -85,7 +85,8 @@ class Uploader:
                     if not file_data:  #End of file reached
                         break
                     entity_key = await self.create_entity(file_data,id,batch_id)
-                    entity_keys.append(entity_key)
+                    print(entity_key)
+                    entity_keys.append(entity_key.as_hex_string())
                     id += 1
                 await self.client.disconnect()   
                 print(f"File upload complete! Total chunks processed: {id}")

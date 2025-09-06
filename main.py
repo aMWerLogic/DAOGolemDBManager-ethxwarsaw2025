@@ -5,8 +5,9 @@ from golem_base_sdk import GolemBaseClient
 from golem_base_sdk import GolemBaseCreate, Annotation
 from uploader import Uploader
 import sys
+from receiver import Receiver
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     print("wrong arguments")
     exit(1)
 
@@ -19,17 +20,23 @@ PRIVATE_KEY = os.getenv(
 RPC_URL = os.getenv("RPC_URL", "https://ethwarsaw.holesky.golemdb.io/rpc")
 WS_URL = os.getenv("WS_URL", "wss://ethwarsaw.holesky.golemdb.io/rpc/ws")
 
+async def upload():
+    uploader = await Uploader.create(sys.argv[1],1000,"golemTEST",PRIVATE_KEY)
+    keys, id = await uploader.upload_file()
+    return keys, id
 
-
-async def main():
-    uploader = await Uploader.create(sys.argv[1],100,"TEST2",PRIVATE_KEY)
-    keys = await uploader.upload_file()
-    return keys
+async def receive(keys):
+    receiver = await Receiver.create(sys.argv[2],keys,PRIVATE_KEY)
+    await receiver.query_entities()
 
 if __name__ == "__main__":
-    keys  = asyncio.run(main())
-    
-    
+
+    keys, id  = asyncio.run(upload())
     for key in keys:
         print("ENTITY KEY:", key)
-    #asyncio.run(create_first_entity())
+    asyncio.run(receive(keys))
+
+
+
+    
+    
