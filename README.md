@@ -41,7 +41,7 @@ The system works with default settings. To customize:
 
 ```bash
 # Copy and edit environment files
-cp .env.example .env
+cp .env-example .env
 cd frontend && cp .env.example .env
 ```
 
