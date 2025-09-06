@@ -20,27 +20,19 @@ class Receiver:
 
     async def create_client(self):
         try:
-            # Convert hex string to bytes
             private_key_hex = self.priv_key.replace("0x", "")
             private_key_bytes = bytes.fromhex(private_key_hex)
-            # Create client
             client = await GolemBaseClient.create_rw_client(
                 rpc_url=self.RPC_URL, ws_url=self.WS_URL, private_key=private_key_bytes
             )
             print("Connected to Golem DB via ETHWarsaw!")
-            # Get owner address
             owner_address = client.get_account_address()
             print(f"Connected with address: {owner_address}")
-
-            # Get and check client account balance
             balance = await client.http_client().eth.get_balance(owner_address)
             print(f"Client account balance: {balance / 10**18} ETH")
-
             if balance == 0:
                 print("Warning: Account balance is 0 ETH. Please acquire test tokens from the faucet.")
-
             return client
-        # in case of an exception/error just return None
         except Exception as e:
             print(f"Error during client creation/connection (returning None): {e}")
             return None
@@ -59,18 +51,23 @@ class Receiver:
             with open(self.file_path, "ab") as file:
                 file.write(result)
 
-
     async def query_entity_for_keys(self):
         entities = await self.client.query_entities(f'type="batch_metadata" && batch_id="{self.batch_id}"')
-        if len(entities) > 1:
+        len_of_entities = len(entities)
+        if len_of_entities > 1:
             print("Warning, more than 1 entity with same batch_id found!")
+        keys = []
+        index_dict = {}
         for result in entities:
             entity_key = result.entity_key
             decoded = result.storage_value.decode("utf-8")
             try:
                 data = json.loads(decoded)
                 print(f"Entity: {entity_key}, Decoded JSON data {data}")
-                return data["entity_keys"]
+                index_dict[data["index"]] = data["entity_keys"]
             except (json.JSONDecodeError, ValueError):
                 print(f"Entity: {entity_key}, Decoded data {decoded}")
                 return -1
+        for idx in sorted(index_dict.keys()):
+            keys.extend(index_dict[idx])
+        return keys

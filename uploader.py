@@ -5,6 +5,8 @@ from golem_base_sdk import GolemBaseClient
 from golem_base_sdk import GolemBaseCreate, Annotation
 import uuid
 import json
+
+#TODO: annotation must not exceed 10KB
 class Uploader:
     def __init__(self, file_path=None, time=None, annotation=None, priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001",RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
         self.file_path = file_path
@@ -24,19 +26,14 @@ class Uploader:
 
     async def create_client(self):
         try:
-            # Convert hex string to bytes
             private_key_hex = self.priv_key.replace("0x", "")
             private_key_bytes = bytes.fromhex(private_key_hex)
-            # Create client
             client = await GolemBaseClient.create_rw_client(
                 rpc_url=self.RPC_URL, ws_url=self.WS_URL, private_key=private_key_bytes
             )
             print("Connected to Golem DB via ETHWarsaw!")
-            # Get owner address
             owner_address = client.get_account_address()
             print(f"Connected with address: {owner_address}")
-
-            # Get and check client account balance
             balance = await client.http_client().eth.get_balance(owner_address)
             print(f"Client account balance: {balance / 10**18} ETH")
 
@@ -44,7 +41,6 @@ class Uploader:
                 print("Warning: Account balance is 0 ETH. Please acquire test tokens from the faucet.")
 
             return client
-        # in case of an exception/error just return None
         except Exception as e:
             print(f"Error during client creation/connection (returning None): {e}")
             return None
@@ -71,16 +67,15 @@ class Uploader:
             print("Problem with client init")
             return -1
 
-    #TODO: if entity_keys weight more than 120KB, then create second or more entities for keys
-    #with the same batch_id
-    async def create_entity_for_keys(self, keys, batch_id, id):
+    async def create_entity_for_keys(self, keys, batch_id, id, index):
         if isinstance(self.client, GolemBaseClient):
             entity = GolemBaseCreate(
                 data=json.dumps({
                 "batch_id": batch_id,
                 "entity_keys": keys,
                 "tag": self.annotation, #usefull for search engine
-                "total_chunks": id
+                "total_chunks": id,
+                "index": index,
             }),
             btl=self.time,
             string_annotations=[
@@ -98,7 +93,7 @@ class Uploader:
 
     async def upload_file(self):
         id = 0
-        chunk_size = 1024 * 100  #100KB chunks
+        chunk_size = 1024 * 100 #100KB
         entity_keys = []
         batch_id = str(uuid.uuid4())
         try:
@@ -111,10 +106,22 @@ class Uploader:
                     print(entity_key)
                     entity_keys.append(entity_key.as_hex_string())
                     id += 1
-                await self.client.disconnect()   
                 print(f"File upload complete! Total chunks processed: {id}")
-            batch_key = await self.create_entity_for_keys(entity_keys,batch_id,id)
-            print("batch_key:", batch_key)
+            
+            #Check if entity_keys array exceeds 100KB
+            keys_json = json.dumps(entity_keys)
+            keys_size = len(keys_json.encode('utf-8'))
+            index = 1
+            if keys_size <= 100 * 1024: #TEST with lower values
+                batch_key = await self.create_entity_for_keys(entity_keys, batch_id, id, index)
+                print("batch_key:", batch_key)
+            else:
+                for i in range(0, len(entity_keys), 1000): # test with 3
+                    sub_batch = entity_keys[i:i + 1000] # test with 3
+                    print(f"Uploading keys {i} to {i+len(sub_batch)-1}")
+                    await self.create_entity_for_keys(sub_batch, batch_id, id, index)
+                    index+=1
+            await self.client.disconnect()  
             return entity_keys, batch_id
         except FileNotFoundError:
             print(f"File {self.file_path} not found.")
