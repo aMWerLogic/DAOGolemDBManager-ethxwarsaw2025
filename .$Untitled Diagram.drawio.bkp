@@ -1,0 +1,58 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="FusLxD8HePXtfx_E-UND">
+    <mxGraphModel dx="2266" dy="909" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mbETRsM_hi_IastwesMm-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="180" width="260" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-2" value="Search for data dumps: ......." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="190" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-4" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="280" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-3" value="Upload data_dump" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="215" y="295" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-5" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="330" y="200" as="sourcePoint" />
+            <mxPoint x="380" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-6" value="Download data_dump" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="90" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="mbETRsM_hi_IastwesMm-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="30" y="490" as="sourcePoint" />
+            <mxPoint x="80" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-9" value="connect_wallet" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="mbETRsM_hi_IastwesMm-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="270" y="630" as="sourcePoint" />
+            <mxPoint x="220" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-11" value="choose_directory&lt;div&gt;Add_data_dump_unique name&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="570" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-12" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="650" as="sourcePoint" />
+            <mxPoint x="230" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mbETRsM_hi_IastwesMm-13" value="1. Oblicza rozmiar danych&lt;div&gt;2. Daje request on-chain + sprawdzenie czy są środki na koncie&lt;/div&gt;&lt;div&gt;3. Jesli jest match i offer has been accepted -&amp;gt; Uzyj Api do wpierdolu danych&lt;/div&gt;&lt;div&gt;4. Dodaj entry do kontraktu? albo backendu&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="750" width="470" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
