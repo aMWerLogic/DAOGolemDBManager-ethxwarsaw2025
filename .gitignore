@@ -1,5 +1,10 @@
 .env
 *.txt
 *.drawio
+*.drawio.bkp
 /venv
-/_pycache_
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
