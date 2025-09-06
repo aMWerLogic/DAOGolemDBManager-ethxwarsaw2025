@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from golem_base_sdk import GolemBaseClient
 from golem_base_sdk import GolemBaseCreate, Annotation
 import uuid
-
+import json
 class Uploader:
     def __init__(self, file_path=None, time=None, annotation=None, priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001",RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
         self.file_path = file_path
@@ -51,7 +51,6 @@ class Uploader:
 
 
     async def create_entity(self, chunk, chunk_id, batch_id):
-
         #client = await self.create_client()
         if isinstance(self.client, GolemBaseClient):
             # Create entity
@@ -72,6 +71,30 @@ class Uploader:
             print("Problem with client init")
             return -1
 
+    #TODO: if entity_keys weight more than 120KB, then create second or more entities for keys
+    #with the same batch_id
+    async def create_entity_for_keys(self, keys, batch_id, id):
+        if isinstance(self.client, GolemBaseClient):
+            entity = GolemBaseCreate(
+                data=json.dumps({
+                "batch_id": batch_id,
+                "entity_keys": keys,
+                "tag": self.annotation, #usefull for search engine
+                "total_chunks": id
+            }),
+            btl=self.time,
+            string_annotations=[
+                Annotation(key="type", value="batch_metadata"),
+                Annotation(key="batch_id", value=batch_id),
+            ],
+            numeric_annotations=[
+                ]
+            )
+            receipt = await self.client.create_entities([entity])
+            return receipt[0].entity_key
+        else:
+            print("Problem with client init")
+            return -1
 
     async def upload_file(self):
         id = 0
@@ -90,8 +113,9 @@ class Uploader:
                     id += 1
                 await self.client.disconnect()   
                 print(f"File upload complete! Total chunks processed: {id}")
-                return entity_keys, id
-             
+            batch_key = await self.create_entity_for_keys(entity_keys,batch_id,id)
+            print("batch_key:", batch_key)
+            return entity_keys, batch_id
         except FileNotFoundError:
             print(f"File {self.file_path} not found.")
             return -1

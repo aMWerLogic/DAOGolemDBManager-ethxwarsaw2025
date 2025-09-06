@@ -22,19 +22,19 @@ WS_URL = os.getenv("WS_URL", "wss://ethwarsaw.holesky.golemdb.io/rpc/ws")
 
 async def upload():
     uploader = await Uploader.create(sys.argv[1],1000,"golemTEST",PRIVATE_KEY)
-    keys, id = await uploader.upload_file()
-    return keys, id
+    keys, batch_id = await uploader.upload_file()
+    return keys, batch_id
 
-async def receive(keys):
-    receiver = await Receiver.create(sys.argv[2],keys,PRIVATE_KEY)
+async def receive(batch_id):
+    receiver = await Receiver.create(sys.argv[2],batch_id,PRIVATE_KEY)
     await receiver.query_entities()
 
 if __name__ == "__main__":
 
-    keys, id  = asyncio.run(upload())
+    keys, batch_id  = asyncio.run(upload())
     for key in keys:
         print("ENTITY KEY:", key)
-    asyncio.run(receive(keys))
+    asyncio.run(receive(batch_id))
 
 
 

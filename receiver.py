@@ -1,18 +1,19 @@
 from dotenv import load_dotenv
 from golem_base_sdk import GolemBaseClient, GenericBytes
 import os
+import json
 class Receiver:
-    def __init__(self, file_path=None, keys=[],priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001",RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
+    def __init__(self, file_path=None,batch_id=None,priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001",RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
         self.file_path = file_path
-        self.keys = keys
+        self.batch_id = batch_id
         self.priv_key = priv_key
         self.RPC_URL = RPC_URL
         self.WS_URL = WS_URL
         self.client = None
 
     @classmethod
-    async def create(cls, file_path=None, keys=[],priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001", RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
-        instance = cls(file_path, keys,priv_key, RPC_URL, WS_URL)
+    async def create(cls, file_path=None,batch_id=None,priv_key = "0x0000000000000000000000000000000000000000000000000000000000000001", RPC_URL="https://ethwarsaw.holesky.golemdb.io/rpc",WS_URL="wss://ethwarsaw.holesky.golemdb.io/rpc/ws"):
+        instance = cls(file_path,batch_id,priv_key, RPC_URL, WS_URL)
         instance.client = await instance.create_client()
         return instance
 
@@ -47,7 +48,8 @@ class Receiver:
     async def query_entities(self):
         if os.path.exists(self.file_path):
             os.remove(self.file_path)
-        for entity_key in self.keys:
+        keys = await self.query_entity_for_keys()
+        for entity_key in keys:
             print(entity_key)
             try:
                 result = await self.client.get_storage_value(GenericBytes.from_hex_string(entity_key))
@@ -56,3 +58,19 @@ class Receiver:
                 return None
             with open(self.file_path, "ab") as file:
                 file.write(result)
+
+
+    async def query_entity_for_keys(self):
+        entities = await self.client.query_entities(f'type="batch_metadata" && batch_id="{self.batch_id}"')
+        if len(entities) > 1:
+            print("Warning, more than 1 entity with same batch_id found!")
+        for result in entities:
+            entity_key = result.entity_key
+            decoded = result.storage_value.decode("utf-8")
+            try:
+                data = json.loads(decoded)
+                print(f"Entity: {entity_key}, Decoded JSON data {data}")
+                return data["entity_keys"]
+            except (json.JSONDecodeError, ValueError):
+                print(f"Entity: {entity_key}, Decoded data {decoded}")
+                return -1
