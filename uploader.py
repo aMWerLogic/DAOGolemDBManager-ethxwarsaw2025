@@ -57,7 +57,7 @@ class Uploader:
             # Create entity
             entity = GolemBaseCreate(
                 data=chunk,
-                btl=self.time,  # Expires after 100 blocks
+                btl=self.time,
                 string_annotations=[
                     Annotation(key="data_dump", value=self.annotation),
                     Annotation(key="batch_id", value=batch_id),
@@ -66,8 +66,8 @@ class Uploader:
                     Annotation(key="index", value=chunk_id+1)
                 ]
             )
-            
-            return entity
+            receipt = await self.client.create_entities([entity])
+            return receipt[0].entity_key
         else:
             print("Problem with client init")
             return -1
@@ -77,7 +77,6 @@ class Uploader:
         id = 0
         chunk_size = 1024 * 100  #100KB chunks
         entity_keys = []
-        entities = []
         batch_id = str(uuid.uuid4())
         try:
             with open(self.file_path, "rb") as file:
@@ -85,16 +84,11 @@ class Uploader:
                     file_data = file.read(chunk_size)
                     if not file_data:  #End of file reached
                         break
-                    entity = await self.create_entity(file_data,id,batch_id)
-                    entities.append(entity)
-                    #print(f"Processed chunk {id}, size: {len(file_data)} bytes")
+                    entity_key = await self.create_entity(file_data,id,batch_id)
+                    entity_keys.append(entity_key)
                     id += 1
-                receipts = await self.client.create_entities(entities)
-                for receipt in receipts:
-                    entity_keys.append(receipt.entity_key)
                 await self.client.disconnect()   
                 print(f"File upload complete! Total chunks processed: {id}")
-                print(f"Data expires at block: {receipts[0].expiration_block}")
                 return entity_keys, id
              
         except FileNotFoundError:

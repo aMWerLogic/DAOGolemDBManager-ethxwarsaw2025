@@ -22,7 +22,7 @@ WS_URL = os.getenv("WS_URL", "wss://ethwarsaw.holesky.golemdb.io/rpc/ws")
 
 
 async def main():
-    uploader = await Uploader.create(sys.argv[1],100,"TEST",PRIVATE_KEY)
+    uploader = await Uploader.create(sys.argv[1],100,"TEST2",PRIVATE_KEY)
     keys = await uploader.upload_file()
     return keys
 
