@@ -17,6 +17,10 @@ https://youtu.be/sHByE_w_ahE
 - Marcin Jędral
 - Aleksander Wiącek
 
+## Bounty
+
+- GolemDB
+
 ## Quick Start
 
 ### Prerequisites
