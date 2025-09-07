@@ -8,6 +8,11 @@ After pushing all chunks of file data to golemDB our backend then creates one or
 
 ![Architecture Overview](image.png)
 
+## Team Members
+
+- Marcin Jędral
+- Aleksander Wiącek
+
 ## Quick Start
 
 ### Prerequisites
