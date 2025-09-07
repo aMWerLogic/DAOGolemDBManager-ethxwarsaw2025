@@ -203,13 +203,18 @@ const SearchInterface = () => {
                                                         {Object.entries(result.annotations).map(([key, value]) => (
                                                             <div key={key}>
                                                                 <strong>{key}:</strong> {
-                                                                    key === 'expiration_date' ? (
-                                                                        <span style={{
-                                                                            color: new Date(value) < new Date() ? '#dc3545' : '#28a745'
-                                                                        }}>
-                                                                            {new Date(value).toLocaleString()}
-                                                                            {new Date(value) < new Date() && ' (EXPIRED)'}
-                                                                        </span>
+                                                                    key === 'expiration_date' && value ? (
+                                                                        (() => {
+                                                                            try {
+                                                                                const date = new Date(value);
+                                                                                if (isNaN(date.getTime())) {
+                                                                                    return value;
+                                                                                }
+                                                                                return date.toLocaleString();
+                                                                            } catch (error) {
+                                                                                return value;
+                                                                            }
+                                                                        })()
                                                                     ) : value
                                                                 }
                                                             </div>
