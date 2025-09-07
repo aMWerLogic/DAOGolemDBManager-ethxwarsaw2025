@@ -104,4 +104,8 @@ npm start
 - 0x6119Cb84698758Bbb9fe9257bF95Ecd7eA8AdF1b
 - 0xEc2e9d7f437f4938f70418A35F97d7fa2ED8a16A
 
-GPLv3 License
+## License
+
+This project is licensed under the GNU General Public License v3.0 (GPLv3) - see the [LICENSE](LICENSE) file for details.
+
+For more information about GPLv3, visit: https://www.gnu.org/licenses/gpl-3.0.html
