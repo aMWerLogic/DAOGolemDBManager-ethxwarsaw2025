@@ -31,6 +31,12 @@ wheels/
 *.egg
 MANIFEST
 
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
 # Node.js
 node_modules/
 npm-debug.log*
@@ -54,3 +60,8 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Test files
+test_*.txt
+*_test.txt
+test_*.dat
