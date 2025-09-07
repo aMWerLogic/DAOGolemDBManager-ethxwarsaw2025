@@ -99,3 +99,5 @@ npm start
 - Make sure MetaMask is installed
 - Allow the site to connect to MetaMask
 - The app will automatically switch to the correct network
+
+GPLv3 License
