@@ -99,10 +99,9 @@ cd frontend
 npm install
 npm start
 ```
+## Wallet addresses
 
-**MetaMask connection issues?**
-- Make sure MetaMask is installed
-- Allow the site to connect to MetaMask
-- The app will automatically switch to the correct network
+- 0x6119Cb84698758Bbb9fe9257bF95Ecd7eA8AdF1b
+- 0xEc2e9d7f437f4938f70418A35F97d7fa2ED8a16A
 
 GPLv3 License
