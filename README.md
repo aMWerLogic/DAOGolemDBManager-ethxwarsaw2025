@@ -1,4 +1,4 @@
-# DAO GolemDB Interface
+# DAO GolemDB Manager
 
 A decentralized interface for uploading, searching, and downloading files using GolemDB - a blockchain-based decentralized database.
 
