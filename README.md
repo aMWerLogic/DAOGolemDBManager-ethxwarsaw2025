@@ -45,6 +45,12 @@ cp .env-example .env
 cd frontend && cp .env.example .env
 ```
 
+## Architecture
+
+![System Architecture](docs/architecture.png)
+
+*[View/Edit Diagram](docs/GOLEM_DAO_UPLOADER.drawio)*
+
 ## Features
 
 - **File Upload**: Drag & drop files with TTL control (5 min - 7 days)
